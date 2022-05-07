@@ -1,0 +1,29 @@
+NOTE: in mongoDB docs this examples are providsed for many diffrent languages like mongoDB shell, node.js, python etc so there is one deopdown which we can use to change language and see in this oprations can be pufform in specific envorments because each envorments will have syntext diffrence little bit.
+
+1) db.<collection>.insertOne() = insert the single document abd return acnolagement of successfull or failue value and object id
+
+- it create _id by itself and if provided then use it
+
+- db.inventory.insertOne(
+   { item: "canvas", qty: 100, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
+)
+
+2) db.<collection>.insertMany() = insert multiple records at a time it requires array of documents and returns acnolagement and ids which are created.
+
+- it create _id by itself and if provided then use it
+
+- db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], size: { h: 14, w: 21, uom: "cm" } },
+   { item: "mat", qty: 85, tags: ["gray"], size: { h: 27.9, w: 35.5, uom: "cm" } },
+   { item: "mousepad", qty: 25, tags: ["gel", "blue"], size: { h: 19, w: 22.85, uom: "cm" } }
+])
+
+
+
+db.inventory.insertMany([
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "A" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
+]);

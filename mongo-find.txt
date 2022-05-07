@@ -1,0 +1,219 @@
+--------------------------  FIND ---------------------
+
+- we use find method in mongoDB to find any documents base on any specific conditions and find also accepts some other params which we will explore in future.
+
+1) db.<collection>.find( {} )
+- findes all the documents from collection
+
+2) db.<collection>.find({status: "D"})
+- findes collections where status is d
+
+3) db.<collection>.find({status: { $in: ["a", "d"] }})
+- this $in is one of the many query oprator from mongoDB which use to specify specific cases and all this query oprator are starts with $. we will learn them in future.
+
+- this will find all collections where status is a or d
+
+
+4) db.<collection>.find({ status: "A", qty: 2 })
+- many times we also want to specific more then one and conditions in query so we can do that by passing other condition in main find object. mongoDB find by default treate all condition as and not or.
+
+5) db.<collection>.find( 
+    { 
+        $or: [
+            {status: "a"}, 
+            {qty: {$lt: 30} }
+        ] 
+    } 
+)
+
+- if we want to use or condition in our query we have to use built in oprator cald $or which accepts [] and we can give multiple or condition as {} in it.
+
+
+6) db.<collection>.find(
+    {
+        status: "a",
+        $or: [{qty: 40}]
+    }
+)
+
+- we can also define and and or conditions togather in single query by just passing and condition in main find object directly and or in $or array.
+
+
+
+
+- thay simply mins in main find object if we see , we should translate it as and and $or as or so by this we will better understand the query.
+
+
+
+
+----------------------------- Find in embeded document -----------------
+
+
+- we can find in any embeded document as well using find an embeded document is document key which also contains other object for ex in data bellow size is one of the embeded document. 
+
+- DATA
+
+db.inventory.insertMany( [
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "A" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
+]);
+
+
+1) db.<collection>.find({size: { h: 14, w: 21, uom: "cm" }})
+- by passing the whole embeded document like this mongoDB will return the collections which has exzet same structure in size in it.
+
+- hear the order of fields as also important in we change it then also it will not give result for ex 
+
+- db.<collection>.find({size: {  w: 21, h: 14, uom: "cm" }}) 
+- this will return notthing but it match the first document but the order is not same of keys so it will not consider.
+
+
+2) db.<collection>.find({ "size.h": 8.5 })
+- like this we can use . oprator for get nested keys and find base on that. we can chain this . oprator for more and more deep nests.
+
+3) db.<collection>.find{ {qty: 100, "size.umo": "in"} }
+- we can use any combanitation of and or and other query oprator in quert with . oprator
+
+
+
+------------------------- Find in Array -------------------
+
+- we can find in any array type as well but there are some senarios and specific things whic you should take and mind and they are as bellow.
+
+- DATA
+db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], dim_cm: [ 14, 21 ] },
+   { item: "notebook", qty: 50, tags: ["red", "blank"], dim_cm: [ 14, 21 ] },
+   { item: "paper", qty: 100, tags: ["red", "blank", "plain"], dim_cm: [ 14, 21 ] },
+   { item: "planner", qty: 75, tags: ["blank", "red"], dim_cm: [ 22.85, 30 ] },
+   { item: "postcard", qty: 45, tags: ["blue"], dim_cm: [ 10, 15.25 ] }
+]);
+
+
+1) db.<collection>.find({ tags: ["red", "green"] })
+- just like a find whole value in object we can find whole array in hear as well
+- so this will find collections where tags are ["red", "green"] and they also have to be in same order. 
+
+2) db.<collection>.find({ tage: {$all : ["red", "green"]} })
+- this is just like above query but the diffrence is that when we use $all oprator it check if the tags also has same values but if the order will be diffrent then it's ok. so if we want to check same array condition but we are ok with diffrent order of storing it then we can use $all oprator.
+
+3) db.<collection>.find({ tags: "red" })
+- if the tags is array still we can find by single value hare the query find all the collections where tags array contains red in it.
+
+4) db.<collection>.find({ dim_cm: {$gt: 10} })
+- this is same as above just it will check any of array element is grater then 10
+
+5) db.<collection>.find.find( { dim_cm: {$gt: 10, $lt: 20} } )
+- we can specify multiple and or or conditions or combanitation of both as well but keep in mind hare find weill return any collection which dim_cm array has one gt 10 and on lt 20 value or any one value which is satisfy both condition sitll it will consider it as true.
+- so hear for every array element if one or this 3 condition is satisfy it will consider it as true.
+
+6) db.<collection>.find.find( { dim_cm: {$elemMatch: {$gt: 10, $lt: 20} } } )
+- this is just like above just diffrence is $elemMatch is used to specific multiple conditions which will be true for sinfle element.
+- so hear unlide above one element is gt 10 and lt 20 at a same time then and only the it's true.
+
+
+7) db.<collection>.find.find( { dim_cm.1: 2 } )
+- just like . in object we can use . in array to grab specific index values and hare in arrays just like code index start from 0
+
+8) db.<collection>.find.find( { dim_cm: {$size: 3} } )
+- we have $size oprator to get size of array and we can compare size of arrays in every collection with it.
+
+
+
+
+
+----------------------- Array of embaded documents -------------------
+- in quering array of embeded documents the rules are kind of same like array and embaded document
+
+-DATA
+db.inventory.insertMany( [
+   { item: "journal", instock: [ { warehouse: "A", qty: 5 }, { warehouse: "C", qty: 15 } ] },
+   { item: "notebook", instock: [ { warehouse: "C", qty: 5 } ] },
+   { item: "paper", instock: [ { warehouse: "A", qty: 60 }, { warehouse: "B", qty: 15 } ] },
+   { item: "planner", instock: [ { warehouse: "A", qty: 40 }, { warehouse: "B", qty: 5 } ] },
+   { item: "postcard", instock: [ { warehouse: "B", qty: 15 }, { warehouse: "C", qty: 35 } ] }
+]);
+
+
+1) db.inventory.find( { "instock": { warehouse: "A", qty: 5 } } )
+- this will find document in which from all array of embaded document any one match the same values and keys in same order as well.
+
+2) db.inventory.find( { 'instock.qty': { $lte: 20 } } )
+- this will give collection in which from array of embaded document any one document has key qty and it's value is lte 20
+
+3) db.inventory.find( { 'instock.0.qty': { $lte: 20 } } )
+- we can get specific item from array and then get specific key and use find on them
+
+4) db.inventory.find( { "instock": { $elemMatch: { qty: 5, warehouse: "A" } } } )
+- we can use $elemMatch to find multiple things on same item of array of embaded document hear it will return collection where qty is 5 and warehouse is A at a same time in single document so if any one of the embaded document from array of embaded document has both this true then that document will included in find.
+
+
+5) db.inventory.find( { "instock.qty": 5, "instock.warehouse": "A" } } } )
+- hear it will return document where any array of document has instock.qty 5 or any document has instock.warehouse A not nessacery this both should be in same embaded document. 
+- so in 4 and 5 the diffrence is in 4 it will check both condition should be in same embaded document of array of embaded document and in 5 both contains can be in same embaded document or 1 can be in ether and 2 can be in another embaded document of same array of embaded document.
+
+
+- so keep in mind when we work with embeded documents and pass conditions without $elemMatch it will check both for both or any one in single embaded document and in $elemMatch it check both in single document.
+
+
+
+
+---------------------- Find projection ---------------
+
+- by default find method returns all the fields from document so just getting some specific values from document is cald projection in find
+
+- find accepts projection object as 2 param wher we can define fields which we want to include or exclude in returned document.
+
+1) db.inventory.find( { status: "A" }, { item: 1, status: 1 } )
+- hare we will only get item and status as projection from find because they are provided in projection object with 1.
+
+- hear in projection object 1 mins include and 0 mins exclude from returned document
+
+- every time if we include or not the _id field will be always include in the return document
+
+2) db.inventory.find( { status: "A" }, { item: 1, status: 1, _id: 0 } )
+
+- as you can see we can also give what to include and what to exclude in returned document 
+- and like this we can also exclude _id if we want but it's not good practic to follow.
+
+3) db.inventory.find( { status: "A" }, { status: 0, instock: 0 } )
+- like this we can exclude unwanted fields from document
+
+4) db.inventory.find(
+   { status: "A" },
+   { item: 1, status: 1, "size.uom": 1 }
+)
+
+- if we want any specific fields only from embaded document or want to remove any spacific field from embeded document then it is possible with . oprator.
+
+
+5) db.inventory.find( { status: "A" }, { item: 1, status: 1, instock: { $slice: -1 } } )
+
+- for getting only some slice from array in projection we have $slice oprator only we cannot use instock.0 like we did in find it's not possible in projection
+
+
+
+
+
+----------------------- null and missing fields -----------------------
+
+
+- diffrent oprators treate null and missing fields diffrently
+
+-DATA
+db.inventory.insertMany([
+   { _id: 1, item: null },
+   { _id: 2 }
+])
+
+1) db.inventory.find( { item: null } )
+- this will find document where item fields is there and value of it is null or document whre there is no item field.
+
+2) db.inventory.find( { item : { $type: 10 } } )
+- this will return only documents which has item field and it's type is null (10 is type number null in mongodb check doc for diffrent type numbers). it will not contain documents which don't have type field in it.
+
+3) db.inventory.find( { item : { $exists: false } } )
+- this will only return document which don't have item field in it. the document whic has item field with null of any other data will not consider.
