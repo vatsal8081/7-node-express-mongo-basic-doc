@@ -1,0 +1,46 @@
+- a mongoDB has some updation methods which we can use to update the document
+
+1) db.<collection>.updateOne(
+    { item: "paper" },
+    {
+        $set: { "size.uom": "cm", status: "P" },
+        $currentDate: { lastModified: true }
+    }
+)
+
+- the update one method is use to just update one document from mongoDB
+
+- it require selcetion query as first argument in it which is notthing but kind of find query which we use in find method and that query will grab first auccorence from the document which match this condation and then we have another param where we define what to set
+
+- in other param we define the update values using $set query oprator and pass fields which we want to update we can pass all document fields or some of them only.
+
+- one key thing to note hear is we cannot change _id in update if we pass it in $set still it will not update and also we pass any sequence of object mongoDB will store it in document in sequence which it was. and if we pass any new field which is not there then also it will be stored.
+
+- hear we also used $currentDate query oprator to get current date and we set it to lastModified field by passing true.
+
+- this will return acnolagement as true or false and also numberOfMatched and numberOfUpdated counts.
+
+
+2) db.<collection>.replaceOne(
+    { item: "paper" },
+    { item: "paper", instock: [ { warehouse: "A", qty: 60 }, { warehouse: "B", qty: 40 } ] }
+)
+
+- the replaceOne aslo has some simmularitys like updateOne it also update the first matched document from the collection 
+
+- but the only diffrence is in updateOne if there is no any field which we passed in set it will add it but hear in replaceOne it will replace whole document by new passed object so all old fields except _id will be deleted and passed new fields will be set.
+
+- this will return acnolagement as true or false and also numberOfMatched and numberOfUpdated counts.
+
+
+3) db.inventory.updateMany(
+   { "qty": { $lt: 50 } },
+   {
+     $set: { "size.uom": "in", status: "P" },
+     $currentDate: { lastModified: true }
+   }
+)
+
+- this is just same as updateOne but it will update all the documents which will match this condation.
+
+- this will return acnolagement as true or false and also numberOfMatched and numberOfUpdated counts.

@@ -1,3 +1,6 @@
 1) express.txt
 2) mongo-create.txt
 3) mongo-find.txt
+4) mongo-update.txt
+5) momgo-delete.txt
+6) mongo-aggrigation.txt

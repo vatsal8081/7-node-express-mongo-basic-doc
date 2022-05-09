@@ -1,0 +1,13 @@
+1) db.inventory.deleteMany({}) 
+- deleteMany is used to delete multiple document from collection which match condation hear we did't pass any condation so it will delete all documents.
+
+- the method will retuen accnolagement and 
+
+- db.inventory.deleteMany({ status : "A" })
+
+
+2) db.inventory.deleteOne( { status: "D" } )
+
+- this will delete only one document which will match first the specified condation
+
+
