@@ -52,7 +52,7 @@ to use aggrigation we can use aggrigate function from mongoDB it accepts array o
    }
 ] )
 
-- with $match oprator we can find documents base on some query so it's just like find method.
+ - with $match oprator we can find documents base on some query so it's just like find method.
 
 - $group is use to group returned results base on any field
 

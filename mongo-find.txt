@@ -118,7 +118,7 @@ db.inventory.insertMany([
 7) db.<collection>.find.find( { dim_cm.1: 2 } )
 - just like . in object we can use . in array to grab specific index values and hare in arrays just like code index start from 0
 
-8) db.<collection>.find.find( { dim_cm: {$size: 3} } )
+8) db.<collection>.find( { dim_cm: {$size: 3} } )
 - we have $size oprator to get size of array and we can compare size of arrays in every collection with it.
 
 
