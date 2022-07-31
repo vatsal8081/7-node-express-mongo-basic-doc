@@ -98,7 +98,7 @@ db.inventory.insertMany([
 - so this will find collections where tags are ["red", "green"] and they also have to be in same order. 
 
 2) db.<collection>.find({ tage: {$all : ["red", "green"]} })
-- this is just like above query but the diffrence is that when we use $all oprator it check if the tags also has same values but if the order will be diffrent then it's ok. so if we want to check same array condition but we are ok with diffrent order of storing it then we can use $all oprator.
+- this is just like above query but t4he diffrence is that when we use $all oprator it check if the tags also has same values but if the order will be diffrent then it's ok. so if we want to check same array condition but we are ok with diffrent order of storing it then we can use $all oprator.
 
 3) db.<collection>.find({ tags: "red" })
 - if the tags is array still we can find by single value hare the query find all the collections where tags array contains red in it.

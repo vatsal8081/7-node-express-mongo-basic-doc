@@ -4,3 +4,5 @@
 4) mongo-update.txt
 5) momgo-delete.txt
 6) mongo-aggrigation.txt
+7) collection-api.txt
+8) operator-api-txt

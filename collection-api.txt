@@ -1,0 +1,18 @@
+1) db.collection.distinct() = give distinct results from collection 
+    - db.inventory.distinct( "dept" )
+    - db.inventory.distinct( "item.sku" )
+    - db.inventory.distinct( "sizes" ) = from size array field it will give distinct
+    - db.inventory.distinct( "item.sku", { dept: "A" } ) = give distinct itme.sku but this time not from all records only records which match query.
+
+2) db.collection.count() = count the total number of records. there are multiple syntext to use and get count with count() but at the end it gives same result so we will learn just one way of rithing it which is by using count after find query so it can count number of records found by find.
+    - db.orders.find().count()
+    - db.collection.find( { a: 5, b: 5 } ).count()
+
+3) db.collection.renameCollection() = this command renames the collection name
+    db.rrecord.renameCollection("record") = it wil rename rrecord collection to record if it not exist.
+
+4) db.collection.totalSize() = this will return total size of the collection.
+
+5) db.collection.drop() = this will drop the collection and all indexes assocated to collection.
+
+6) https://www.mongodb.com/docs/manual/reference/method/ hear there are some methods for findAndModify, findAndReplace, findAndDelete etc take a look on that.
